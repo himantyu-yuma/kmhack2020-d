@@ -83,8 +83,9 @@
             fill: var(--main-color);
         }
 
-        .switch-icon.disabled, #switch-text.disabled,.icon-btn:active {
+        .switch-icon.disabled, #switch-text.disabled, .icon-btn:active {
             fill: gray;
+            color: gray;
         }
 
         #switch-text {
@@ -262,13 +263,13 @@
             MQTTconnect();
         </script>
         <script>
-            const icon = $('.switch-icon');
-            const icon_text = $('#switch-text');
-            icon.on('click', () => {
-                icon.toggleClass('disabled');
-                icon_text.toggleClass('disabled');
-                icon_text.text(icon.hasClass('disabled') ? 'OFF' : 'ON');
-            })
+            // const icon = $('.switch-icon');
+            // const icon_text = $('#switch-text');
+            // icon.on('click', () => {
+            //     icon.toggleClass('disabled');
+            //     icon_text.toggleClass('disabled');
+            //     icon_text.text(icon.hasClass('disabled') ? 'OFF' : 'ON');
+            // })
         </script>
 </body>
 

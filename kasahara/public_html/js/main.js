@@ -7,7 +7,8 @@ const SHIFTR_HOST = "broker.shiftr.io"; // shiftr.ioの接続先 (変更しな�
 const SHIFTR_PORT = 443; // Websocketのポート (TLSで接続する. 変更しない)
 const SHIFTR_KEY = "819bcd7e"; // Key (Username)
 const SHIFTR_SECRET = "460f695cf094a8a5"; // Secret (Password)
-const TOPIC_NAME = "test/query";
+const SENSOR_TOPIC_NAME = "esp/sensor";
+const POSE_TOPIC_NAME = "pose/trigger";
 // clientの設定
 const CLIENT_NAME = "webapp";
 
@@ -43,23 +44,51 @@ function onFailure(message) {
 
 // mqttからメッセージを受信した場合の処理
 function onMessageArrived(r_message) {
-
+    // console.log(r_message.destinationName);
     // console.log('received');
     console.log(r_message.payloadString);
-    // 受け取ったデータ
-    const data = JSON.parse(r_message.payloadString);
-    const temperture = data.temperture;
-    const humid = data.humid;
-    const heart_rate = data.heart_rate;
 
-    // 各データを表示するDOM要素
-    const temperture_element = document.getElementById('temperture');
-    const humid_element = document.getElementById('humid');
-    const heart_rate_element = document.getElementById('heart-rate');
+    // トピックごとに処理を分ける
+    switch (r_message.destinationName) {
+        case SENSOR_TOPIC_NAME:
+            // センシングデータ
+            const data = JSON.parse(r_message.payloadString);
+            const temperture = data.temperture;
+            const humid = data.humid;
+            const heart_rate = data.heart_rate;
 
-    temperture_element.textContent = temperture;
-    humid_element.textContent = humid;
-    heart_rate_element.textContent = heart_rate;
+            // 各データを表示するDOM要素
+            const temperture_element = document.getElementById('temperture');
+            const humid_element = document.getElementById('humid');
+            const heart_rate_element = document.getElementById('heart-rate');
+
+            temperture_element.textContent = temperture;
+            humid_element.textContent = humid;
+            heart_rate_element.textContent = heart_rate;
+            break;
+        case POSE_TOPIC_NAME:
+            // 姿勢データ
+            const trigger = r_message.payloadString;
+            switch (trigger) {
+                case 'sit':
+                    console.log('座った');
+                    // 計測開始
+                    break;
+                case 'sitting':
+                    console.log('座りすぎ');
+                    // アラート
+                    break;
+                case 'stand':
+                    console.log('立った');
+                    // タイマーリセット＆一時停止
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 
@@ -74,7 +103,10 @@ function onConnect() {
     console.log(STATUS_SERVER_CONNECTED);
     connected_flag = 1;
     console.log("on Connect " + connected_flag);
-    mqtt.subscribe(TOPIC_NAME);
+    // センサーデータ購読
+    mqtt.subscribe(SENSOR_TOPIC_NAME);
+    // 姿勢データ購読
+    mqtt.subscribe(POSE_TOPIC_NAME);
 }
 
 // 切断の処理
@@ -124,7 +156,7 @@ const TimeDisplay = () => {
         hour = Math.floor(time / 60 / 60);
         minute = Math.floor(time / 60 - hour * 60);
         sec = time - hour * 60 * 60 - minute * 60;
-        sit_time_element.textContent = `${( '00' + hour).slice( -2 )}:${( '00' + minute).slice( -2 )}:${( '00' + sec).slice( -2 )}`;
+        sit_time_element.textContent = `${('00' + hour).slice(-2)}:${('00' + minute).slice(-2)}:${('00' + sec).slice(-2)}`;
     }, 1000);
 }
 TimeDisplay();
@@ -134,20 +166,24 @@ const ControllAirCon = () => {
     let set_temperture = parseInt(set_temperture_element.textContent);
 
     const switchBtn = document.querySelector('.switch-icon');
+    const switchText = document.getElementById('switch-text');
     const upBtn = document.querySelector('.up-icon');
     const downBtn = document.querySelector('.down-icon');
 
     switchBtn.addEventListener('click', () => {
-        publish('test/signal', '0');
+        switchBtn.classList.toggle('disabled');
+        switchText.classList.toggle('disabled');
+        switchText.textContent = switchBtn.classList.contains('disabled') ? 'OFF' : 'ON';
+        publish('esp/controll', switchBtn.classList.contains('disabled') ? '0' : '1');
     });
 
     upBtn.addEventListener('click', () => {
-        set_temperture ++;
+        set_temperture++;
         set_temperture_element.textContent = set_temperture;
     });
-    
+
     downBtn.addEventListener('click', () => {
-        set_temperture --;
+        set_temperture--;
         set_temperture_element.textContent = set_temperture;
     });
 
