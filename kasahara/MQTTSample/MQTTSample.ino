@@ -1,6 +1,5 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include <string>
 
 // 接続先のSSIDとパスワード
 const char ssid[] = "SSID";
@@ -21,6 +20,7 @@ const char *mqttTopic_Query = "test/query";
 WiFiClient espClient;
 PubSubClient g_mqtt_client(espClient);
 
+// MQTTからのデータを受信する
 void MQTT_callback(char *topic, byte *payload, unsigned int length)
 {
 	Serial.print("received MQTT topic:");
@@ -28,9 +28,33 @@ void MQTT_callback(char *topic, byte *payload, unsigned int length)
 	Serial.print("length = ");
 	Serial.println(length);
 	Serial.print("Payload : ");
-	Serial.println((char *)payload);
-
+	String tempMessage;
+	for (int i = 0; i < length; i++)
+	{
+		tempMessage += (char)payload[i];
+	}
+	Serial.println(tempMessage);
 	Serial.println();
+
+	int switchNum = tempMessage.toInt();
+
+	// 受信したメッセージによって処理
+	// 0，1でオンオフの処理をして，それ以外は温度を直接渡す
+	switch (switchNum)
+	{
+	case 0:
+		// エアコンをオフにする
+		Serial.println("エアコン オフ");
+		break;
+	case 1:
+		// エアコンをオンにする
+		break;
+	case 25:
+		// エアコンの温度設定
+		break;
+	default:
+		break;
+	}
 }
 
 // MQTT Client が接続できなかったら接続できるまで再接続を試みるための MQTT_reconnect 関数
@@ -59,12 +83,11 @@ void MQTT_reconnect()
 
 // MQTTサーバーにデータを送信する関数
 // 温度，湿度，心拍数，CO2濃度の順です
-// 124行目で試しに呼び出しています
-void MQTT_publish_query(float temperture, int humid, int heart_rate, int co2)
+void MQTT_publish_query(int temperture, int humid, int heart_rate, int co2)
 {
 	char payload[64];
 	sprintf(payload,
-			"{\"temperture\": %.1f, \"humid\": %d, \"heart_rate\": %d, \"co2\": %d}", temperture, humid, heart_rate, co2);
+			"{\"temperture\": %d, \"humid\": %d, \"heart_rate\": %d, \"co2\": %d}", temperture, humid, heart_rate, co2);
 
 	// MQTT brokerへpublish
 	g_mqtt_client.publish(mqttTopic_Query, payload);
@@ -121,7 +144,12 @@ void loop()
 	count++;
 	if (count >= 10)
 	{
-		MQTT_publish_query(10.1f, 20, 30, 17);
+		int temp_demo = 20 + (int)(rand() * (30 - 20 + 1.0) / (1.0 + RAND_MAX));
+		int humid_demo = 40 + (int)(rand() * (80 - 40 + 1.0) / (1.0 + RAND_MAX));
+		int beat_demo = 60 + (int)(rand() * (100 - 60 + 1.0) / (1.0 + RAND_MAX));
+		int co2_demo = 17 + (int)(rand() * (19 - 17 + 1.0) / (1.0 + RAND_MAX));
+
+		MQTT_publish_query(temp_demo, humid_demo, beat_demo, co2_demo);
 		count = 0;
 	}
 
