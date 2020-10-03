@@ -44,10 +44,10 @@ function onFailure(message) {
 // mqttからメッセージを受信した場合の処理
 function onMessageArrived(r_message) {
 
+    // console.log('received');
     console.log(r_message.payloadString);
     // 受け取ったデータ
     const data = JSON.parse(r_message.payloadString);
-    console.log(data);
     const temperture = data.temperture;
     const humid = data.humid;
     const heart_rate = data.heart_rate;
@@ -102,6 +102,13 @@ function MQTTconnect() {
     return false
 }
 
+// ブローカーにメッセージを送信
+const publish = (topic, msg) => {
+    message = new Paho.MQTT.Message(msg);
+    message.destinationName = topic;
+    mqtt.send(message);
+}
+
 // 座り続けている時間に表示させるやる
 const TimeDisplay = () => {
     const sit_time_element = document.getElementById('sit-time');
@@ -121,3 +128,28 @@ const TimeDisplay = () => {
     }, 1000);
 }
 TimeDisplay();
+
+const ControllAirCon = () => {
+    const set_temperture_element = document.getElementById('set-temperture');
+    let set_temperture = parseInt(set_temperture_element.textContent);
+
+    const switchBtn = document.querySelector('.switch-icon');
+    const upBtn = document.querySelector('.up-icon');
+    const downBtn = document.querySelector('.down-icon');
+
+    switchBtn.addEventListener('click', () => {
+        publish('test/signal', '0');
+    });
+
+    upBtn.addEventListener('click', () => {
+        set_temperture ++;
+        set_temperture_element.textContent = set_temperture;
+    });
+    
+    downBtn.addEventListener('click', () => {
+        set_temperture --;
+        set_temperture_element.textContent = set_temperture;
+    });
+
+}
+ControllAirCon();
