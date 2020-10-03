@@ -13,8 +13,9 @@ const char *mqttPassword = "460f695cf094a8a5";
 const int mqttPort = 1883;
 
 // Subscribe する MQTT Topic 名
-const char *mqttTopic_Signal = "test/signal";
-const char *mqttTopic_Query = "test/query";
+const char *mqttTopic_Signal = "esp/controll";
+// PublishするMQTT Topic名
+const char *mqttTopic_Query = "esp/sensor";
 
 //Connect WiFi Client and MQTT(PubSub) Client
 WiFiClient espClient;
