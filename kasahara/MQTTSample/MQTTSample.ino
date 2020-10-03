@@ -64,7 +64,7 @@ void MQTT_publish_query(float temperture, int humid, int heart_rate, int co2)
 {
 	char payload[64];
 	sprintf(payload,
-			"{temperture: %.1f, humid: %d, heart_rate: %d, co2: %d}", temperture, humid, heart_rate, co2);
+			"{\"temperture\": %.1f, \"humid\": %d, \"heart_rate\": %d, \"co2\": %d}", temperture, humid, heart_rate, co2);
 
 	// MQTT brokerへpublish
 	g_mqtt_client.publish(mqttTopic_Query, payload);
