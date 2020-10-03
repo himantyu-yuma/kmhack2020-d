@@ -28,17 +28,23 @@
         }
 
         .km-card {
-            width: 936px;
-            height: 44vh;
             background-color: white;
             border-radius: 21px;
             box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
-            margin: 8px 16px;
+            height: 43vh;
+            /* bootstrap不使用の時 */
+            /* width: 936px;
+            margin: 8px 16px; */
+
+            /* bootstrap使用 */
+            margin-top: 1rem;
+            padding-top: 1rem;
+
         }
 
         .km-card-title {
             color: #858585;
-            margin-top: 1rem;
+            /* margin-top: 1rem; */
             margin-left: 5rem;
         }
 
@@ -51,11 +57,11 @@
             text-align: center;
             font-weight: normal;
             font-size: 9rem;
-            margin-top: 8vh;
+            /* margin-top: 8vh; */
+            line-height: 30vh;
         }
 
         .controll-icon {
-            margin-top: 10vh;
             margin-left: 5vw;
             margin-right: 5vw;
         }
@@ -65,10 +71,6 @@
             cursor: pointer;
         }
 
-        .icon-btn:active {
-            fill: gray;
-        }
-
         .down-icon {
             fill: #0056c7;
         }
@@ -76,23 +78,52 @@
         .up-icon {
             fill: #c70000;
         }
-        .switch-icon{
+
+        .switch-icon {
             fill: var(--main-color);
         }
-        .switch-icon.disabled{
+
+        .switch-icon.disabled, #switch-text.disabled,.icon-btn:active {
             fill: gray;
         }
-        #switch-text{
+
+        #switch-text {
             color: var(--main-color);
             font-weight: bold;
         }
-        #switch-text.disabled{
-            color: gray;
+
+        #switch-wrapper {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
         }
+
         /* 単位部分 */
-        .unit{
+        .unit {
             color: #858585;
             font-size: 6rem;
+            margin-left: 1rem;
+        }
+
+        /* 小さめのPCでも対応したい */
+        @media screen and (max-width: 1280px) {
+            .km-card-text {
+                font-size: 5rem;
+            }
+
+            .unit {
+                font-size: 3rem;
+            }
+
+            .km-card-title {
+                margin-left: 1rem;
+            }
+        }
+        /* 微妙なサイズの時 */
+        @media screen and (max-width: 800px){
+            .km-card-title{
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -111,125 +142,134 @@
             <img class="icon" src="img/setting.svg" alt="">
         </div>
     </div>
-    <div class="d-flex">
-        <!-- カード -->
-        <div class="km-card">
-            <div class="d-flex">
-                <div class="w-50">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- カード -->
+                <div class="km-card">
+                    <div class="d-flex">
+                        <div class="w-50">
+                            <h2 class="km-card-title">
+                                室温
+                            </h2>
+                            <div class="km-card-body">
+                                <h3 class="km-card-text">
+                                    <span id="temperture">25</span><span class="unit">℃</span>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="w-50">
+                            <h2 class="km-card-title">
+                                湿度
+                            </h2>
+                            <div class="km-card-body">
+                                <h3 class="km-card-text">
+                                    <span id="humid">50</span><span class="unit">%</span>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="km-card" style="position: relative;">
                     <h2 class="km-card-title">
-                        室温
+                        エアコンの設定温度
+                    </h2>
+                    <div class="text-center" id="switch-wrapper">
+                        <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
+                            class="icon-btn switch-icon disabled" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                            y="0px" viewBox="0 0 512 512" style="width: 3rem; min-width: 44px; opacity: 1;"
+                            xml:space="preserve">
+                            <g>
+                                <path class="st0" d="M423.262,91.992c-16.877-15.91-43.434-15.098-59.32,1.778c-15.894,16.877-15.098,43.434,1.779,59.32
+                                            c32.082,30.213,49.754,71.238,49.754,115.5c0,87.934-71.541,159.476-159.476,159.476S96.525,356.524,96.525,268.59
+                                            c0-44.262,17.668-85.287,49.754-115.5c16.877-15.885,17.672-42.442,1.779-59.32c-15.885-16.885-42.455-17.688-59.32-1.778
+                                            C40.344,137.557,12.59,201.926,12.59,268.59C12.59,402.803,121.783,512,256,512c134.213,0,243.41-109.197,243.41-243.41
+                                            C499.41,201.926,471.656,137.557,423.262,91.992z"></path>
+                                <path class="st0"
+                                    d="M256,268.59c23.178,0,41.967-15.033,41.967-33.574V33.574C297.967,15.033,279.178,0,256,0
+                                            c-23.178,0-41.967,15.033-41.967,33.574v201.443C214.033,253.557,232.822,268.59,256,268.59z">
+                                </path>
+                            </g>
+                        </svg>
+                        <p id="switch-text" class="disabled">OFF</p>
+                    </div>
+                    <div class="km-card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <svg class="controll-icon icon-btn down-icon" xmlns="http://www.w3.org/2000/svg" width="80"
+                                height="69.744" viewBox="0 0 80 69.744">
+                                <path id="多角形_2" data-name="多角形 2"
+                                    d="M35.663,7.562a5,5,0,0,1,8.675,0L75.706,62.256a5,5,0,0,1-4.337,7.488H8.632a5,5,0,0,1-4.337-7.488Z"
+                                    transform="translate(80 69.744) rotate(180)" />
+                            </svg>
+                            <h3 class="km-card-text">
+                                <span id="set-temperture">27</span><span class="unit">℃</span>
+                            </h3>
+                            <svg class="controll-icon icon-btn up-icon" xmlns="http://www.w3.org/2000/svg" width="80"
+                                height="69.333" viewBox="0 0 80 69.333">
+                                <path id="多角形_1" data-name="多角形 1"
+                                    d="M35.669,7.507a5,5,0,0,1,8.662,0L75.674,61.835a5,5,0,0,1-4.331,7.5H8.657a5,5,0,0,1-4.331-7.5Z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="km-card">
+                    <h2 class="km-card-title">
+                        心拍数
                     </h2>
                     <div class="km-card-body">
                         <h3 class="km-card-text">
-                            <span id="temperture">25</span><span class="unit">℃</span>
+                            <span id="heart-rate">100</span><span class="unit">bpm</span>
                         </h3>
                     </div>
                 </div>
-                <div class="w-50">
+            </div>
+            <div class="col-md-6">
+                <div class="km-card">
                     <h2 class="km-card-title">
-                        湿度
+                        座り続けている時間
                     </h2>
                     <div class="km-card-body">
                         <h3 class="km-card-text">
-                            <span id="humid">50</span><span class="unit">%</span>
+                            <span id="sit-time">00:00:00</span>
                         </h3>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- カード -->
-        <div class="km-card">
-            <h2 class="km-card-title">
-                エアコンの設定温度
-            </h2>
-            <div class="km-card-body">
-                <div class="d-flex align-items-center justify-content-center">
-                    <svg class="controll-icon icon-btn down-icon" xmlns="http://www.w3.org/2000/svg" width="80"
-                        height="69.744" viewBox="0 0 80 69.744">
-                        <path id="多角形_2" data-name="多角形 2"
-                            d="M35.663,7.562a5,5,0,0,1,8.675,0L75.706,62.256a5,5,0,0,1-4.337,7.488H8.632a5,5,0,0,1-4.337-7.488Z"
-                            transform="translate(80 69.744) rotate(180)" />
-                    </svg>
-                    <h3 class="km-card-text">
-                        <span id="set-temperture">27</span><span class="unit">℃</span>
-                    </h3>
-                    <svg class="controll-icon icon-btn up-icon" xmlns="http://www.w3.org/2000/svg" width="80"
-                        height="69.333" viewBox="0 0 80 69.333">
-                        <path id="多角形_1" data-name="多角形 1"
-                            d="M35.669,7.507a5,5,0,0,1,8.662,0L75.674,61.835a5,5,0,0,1-4.331,7.5H8.657a5,5,0,0,1-4.331-7.5Z" />
-                    </svg>
-                </div>
-                <!-- <img class="icon-btn" src="img/switch.svg" style="width: 3rem; min-width: 44px;"> -->
-                <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" class="icon-btn switch-icon disabled"
-                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512"
-                    style="width: 3rem; min-width: 44px; opacity: 1;" xml:space="preserve">
-                    <g>
-                        <path class="st0" d="M423.262,91.992c-16.877-15.91-43.434-15.098-59.32,1.778c-15.894,16.877-15.098,43.434,1.779,59.32
-                            c32.082,30.213,49.754,71.238,49.754,115.5c0,87.934-71.541,159.476-159.476,159.476S96.525,356.524,96.525,268.59
-                            c0-44.262,17.668-85.287,49.754-115.5c16.877-15.885,17.672-42.442,1.779-59.32c-15.885-16.885-42.455-17.688-59.32-1.778
-                            C40.344,137.557,12.59,201.926,12.59,268.59C12.59,402.803,121.783,512,256,512c134.213,0,243.41-109.197,243.41-243.41
-                            C499.41,201.926,471.656,137.557,423.262,91.992z"></path>
-                        <path class="st0" d="M256,268.59c23.178,0,41.967-15.033,41.967-33.574V33.574C297.967,15.033,279.178,0,256,0
-                            c-23.178,0-41.967,15.033-41.967,33.574v201.443C214.033,253.557,232.822,268.59,256,268.59z">
-                        </path>
-                    </g>
-                </svg>
-                <p id="switch-text" class="disabled">OFF</p>
-            </div>
-        </div>
-    </div>
 
-    <div class="d-flex">
-        <!-- カード -->
-        <div class="km-card">
-            <h2 class="km-card-title">
-                心拍数
-            </h2>
-            <div class="km-card-body">
-                <h3 class="km-card-text">
-                    <span id="heart-rate">100</span><span class="unit">bpm</span>
-                </h3>
-            </div>
-        </div>
-        <!-- カード -->
-        <div class="km-card">
-            <h2 class="km-card-title">
-                座り続けている時間
-            </h2>
-            <div class="km-card-body">
-                <h3 class="km-card-text">
-                    <span id="sit-time">00:00:00</span>
-                </h3>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-        crossorigin="anonymous"></script>
-    <!-- MQTT over Websocketのライブラリ -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
-    <script type="text/javascript" src="js/main.js"></script>
-    <script>
-        MQTTconnect();
-    </script>
-    <script>
-        const icon = $('.switch-icon');
-        const icon_text = $('#switch-text');
-        icon.on('click', () => {
-            icon.toggleClass('disabled');
-            icon_text.toggleClass('disabled');
-            icon_text.text( icon.hasClass('disabled') ? 'OFF' : 'ON');
-        })
-    </script>
+        <!-- bootstrap -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
+        <!-- MQTT over Websocketのライブラリ -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"
+            type="text/javascript"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <script>
+            MQTTconnect();
+        </script>
+        <script>
+            const icon = $('.switch-icon');
+            const icon_text = $('#switch-text');
+            icon.on('click', () => {
+                icon.toggleClass('disabled');
+                icon_text.toggleClass('disabled');
+                icon_text.text(icon.hasClass('disabled') ? 'OFF' : 'ON');
+            })
+        </script>
 </body>
 
 </html>
