@@ -226,11 +226,11 @@ void MQTT_reconnect()
 // MQTTサーバーにデータを送信する関数
 // 温度，湿度，心拍数，CO2濃度の順です
 // 124行目で試しに呼び出しています
-void MQTT_publish_query(float temperture, int humid, int heart_rate, int co2)
+void MQTT_publish_query(int temperture, int humid, int heart_rate, int co2)
 {
   char payload[64];
   sprintf(payload,
-      "{\"temperture\": %.1f, \"humid\": %d, \"heart_rate\": %d, \"co2\": %d}", temperture, humid, heart_rate, co2);
+      "{\"temperture\": %d, \"humid\": %d, \"heart_rate\": %d, \"co2\": %d}", temperture, humid, heart_rate, co2);
   // MQTT brokerへpublish
   g_mqtt_client.publish(mqttTopic_Query, payload);
 }
