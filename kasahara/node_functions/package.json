@@ -1,0 +1,13 @@
+{
+  "name": "kmhack2020-d",
+  "version": "1.0.0",
+  "description": "コニカミノルタハッカソン2020で使用",
+  "main": "index.js",
+  "author": "kasahara",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "http": "^0.0.1-security",
+    "mqtt": "^4.2.1"
+  }
+}
