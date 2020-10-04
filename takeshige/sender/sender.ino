@@ -83,6 +83,11 @@ switch (var) {
    irsend.sendRaw(turn_on23, 299, 38); 
    Serial.println("The current temperature is 23 degrees.");
     break;
+
+   case '2':
+   irsend.sendRaw(turn_on23, 299, 38); 
+   Serial.println("The current temperature is 23 degrees.");
+    break;
 }
     delay(1000); 
 

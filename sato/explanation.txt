@@ -1,0 +1,10 @@
+ちょっとした解説
+
+・基本的には
+https://github.com/rwightman/posenet-python
+のwebcam_demo.pyを活用しています。
+
+
+・サーバーとのやり取りはリクエスト用のクラスに関節点を送り、前の状態との比較を行なっています。（webcam_demo.pyの52,53行目辺り）
+
+・サーバーとのやり取りのあたりはnode_function 内でやっています（himantyu-yumaが作成）
