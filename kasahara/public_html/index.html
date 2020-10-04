@@ -56,7 +56,7 @@
             color: var(--main-color);
             text-align: center;
             font-weight: normal;
-            font-size: 9rem;
+            font-size: 8rem;
             /* margin-top: 8vh; */
             line-height: 30vh;
         }
@@ -83,7 +83,9 @@
             fill: var(--main-color);
         }
 
-        .switch-icon.disabled, #switch-text.disabled, .icon-btn:active {
+        .switch-icon.disabled,
+        #switch-text.disabled,
+        .icon-btn:active {
             fill: gray;
             color: gray;
         }
@@ -102,7 +104,7 @@
         /* 単位部分 */
         .unit {
             color: #858585;
-            font-size: 6rem;
+            font-size: 5rem;
             margin-left: 1rem;
         }
 
@@ -120,9 +122,10 @@
                 margin-left: 1rem;
             }
         }
+
         /* 微妙なサイズの時 */
-        @media screen and (max-width: 800px){
-            .km-card-title{
+        @media screen and (max-width: 800px) {
+            .km-card-title {
                 font-size: 1.5rem;
             }
         }
@@ -219,7 +222,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="km-card">
                     <h2 class="km-card-title">
                         心拍数
@@ -227,6 +230,18 @@
                     <div class="km-card-body">
                         <h3 class="km-card-text">
                             <span id="heart-rate">100</span><span class="unit">bpm</span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="km-card">
+                    <h2 class="km-card-title">
+                        CO2濃度
+                    </h2>
+                    <div class="km-card-body">
+                        <h3 class="km-card-text">
+                            <span id="co2">100</span><span class="unit">ppm</span>
                         </h3>
                     </div>
                 </div>
@@ -244,7 +259,7 @@
                 </div>
             </div>
         </div>
-
+        <audio id="notify-sound" src="sound/notify.mp3" preload="auto"></audio>
         <!-- bootstrap -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -258,6 +273,7 @@
         <!-- MQTT over Websocketのライブラリ -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"
             type="text/javascript"></script>
+        <!-- アラート -->
         <script type="text/javascript" src="js/main.js"></script>
         <script>
             MQTTconnect();

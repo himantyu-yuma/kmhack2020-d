@@ -56,29 +56,48 @@ function onMessageArrived(r_message) {
             const temperture = data.temperture;
             const humid = data.humid;
             const heart_rate = data.heart_rate;
+            const co2 = data.co2;
 
             // 各データを表示するDOM要素
             const temperture_element = document.getElementById('temperture');
             const humid_element = document.getElementById('humid');
             const heart_rate_element = document.getElementById('heart-rate');
+            const co2_element = document.getElementById('co2');
 
             temperture_element.textContent = temperture;
             humid_element.textContent = humid;
             heart_rate_element.textContent = heart_rate;
+            co2_element.textContent = co2;
+
+            // 心拍数が低かった時（眠そうなとき）
+            if(heart_rate <= 90){
+                
+            }
+
             break;
         case POSE_TOPIC_NAME:
             // 姿勢データ
             const trigger = r_message.payloadString;
+            let time = 0;
+            let timer;
             switch (trigger) {
                 case 'sit':
                     console.log('座った');
                     // 計測開始
-                    break;
-                case 'sitting':
-                    console.log('座りすぎ');
-                    // アラート
+                    timer = setInterval(() => {
+                        // 1秒ずつ増やす
+                        time++;
+                        TimeDisplay(time);
+                        // 1時間半以上座ってたらアラート
+                        if(time >= 5400){
+                            document.getElementById('notify-sound').play();
+                        }
+                    }, 1000);
                     break;
                 case 'stand':
+                    clearInterval(timer);
+                    time = 0;
+                    TimeDisplay(time);
                     console.log('立った');
                     // タイマーリセット＆一時停止
                     break;
@@ -142,24 +161,20 @@ const publish = (topic, msg) => {
 }
 
 // 座り続けている時間に表示させるやる
-const TimeDisplay = () => {
-    const sit_time_element = document.getElementById('sit-time');
-
-    let time = 0;
+const TimeDisplay = time => {
     let hour = 0;
     let minute = 0;
     let sec = 0;
 
-    setInterval(() => {
-        // 1秒ずつ増やす
-        time++;
-        hour = Math.floor(time / 60 / 60);
-        minute = Math.floor(time / 60 - hour * 60);
-        sec = time - hour * 60 * 60 - minute * 60;
-        sit_time_element.textContent = `${('00' + hour).slice(-2)}:${('00' + minute).slice(-2)}:${('00' + sec).slice(-2)}`;
-    }, 1000);
+    const sit_time_element = document.getElementById('sit-time');
+
+    hour = Math.floor(time / 60 / 60);
+    minute = Math.floor(time / 60 - hour * 60);
+    sec = time - hour * 60 * 60 - minute * 60;
+    sit_time_element.textContent = `${('00' + hour).slice(-2)}:${('00' + minute).slice(-2)}:${('00' + sec).slice(-2)}`;
 }
-TimeDisplay();
+
+
 
 const ControllAirCon = () => {
     const set_temperture_element = document.getElementById('set-temperture');
@@ -180,11 +195,13 @@ const ControllAirCon = () => {
     upBtn.addEventListener('click', () => {
         set_temperture++;
         set_temperture_element.textContent = set_temperture;
+        publish('esp/controll', set_temperture.toString());
     });
 
     downBtn.addEventListener('click', () => {
         set_temperture--;
         set_temperture_element.textContent = set_temperture;
+        publish('esp/controll', set_temperture.toString());
     });
 
 }
